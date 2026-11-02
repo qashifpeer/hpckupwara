@@ -1,2 +1,4 @@
 import {schoolRegistration} from './schoolRegistration';
-export const schemaTypes=[schoolRegistration];
+import { masterSchool } from './masterSchool';
+import { dataCompleted } from './dataCompleted';
+export const schemaTypes=[schoolRegistration, masterSchool, dataCompleted ];

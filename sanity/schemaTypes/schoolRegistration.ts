@@ -52,24 +52,68 @@ export const schoolRegistration = {
       title: 'Total Staff',
       type: 'number',
       hidden: ({ document }: any) => document?.registeredOnHpc !== 'Yes',
+      validation: (Rule: any) =>
+        Rule.custom((value: number | undefined, context: any) => {
+          if (context.document?.registeredOnHpc === 'Yes') {
+            if (value === undefined || value === null) return 'Total staff is required';
+            if (value < 0 || value > 1000) return 'Total staff must be between 0 and 1000';
+            if (!Number.isInteger(value)) return 'Must be a whole number';
+          }
+          return true;
+        }),
     },
     {
       name: 'staffRegisteredOnHpc',
       title: 'Staff Registered on HPC',
       type: 'number',
       hidden: ({ document }: any) => document?.registeredOnHpc !== 'Yes',
+      validation: (Rule: any) =>
+        Rule.custom((value: number | undefined, context: any) => {
+          if (context.document?.registeredOnHpc === 'Yes') {
+            if (value === undefined || value === null) return 'Registered staff count is required';
+            if (value < 0 || value > 1000) return 'Registered staff must be between 0 and 1000';
+            if (!Number.isInteger(value)) return 'Must be a whole number';
+            const total = context.document?.totalStaff;
+            if (typeof total === 'number' && value > total) {
+              return 'Registered staff cannot exceed Total Staff';
+            }
+          }
+          return true;
+        }),
     },
     {
       name: 'studentEnrollmentKto8',
       title: 'Total Student Enrollment (Kindergarten to 8th)',
       type: 'number',
       hidden: ({ document }: any) => document?.registeredOnHpc !== 'Yes',
+      validation: (Rule: any) =>
+        Rule.custom((value: number | undefined, context: any) => {
+          if (context.document?.registeredOnHpc === 'Yes') {
+            if (value === undefined || value === null) return 'Student enrollment is required';
+            if (value < 0 || value > 1000) return 'Enrollment must be between 0 and 1000';
+            if (!Number.isInteger(value)) return 'Must be a whole number';
+          }
+          return true;
+        }),
     },
     {
       name: 'registeredStudentEnrollment',
       title: 'Registered Student Enrollment on HPC',
       type: 'number',
       hidden: ({ document }: any) => document?.registeredOnHpc !== 'Yes',
+      validation: (Rule: any) =>
+        Rule.custom((value: number | undefined, context: any) => {
+          if (context.document?.registeredOnHpc === 'Yes') {
+            if (value === undefined || value === null) return 'Registered student enrollment is required';
+            if (value < 0 || value > 1000) return 'Registered enrollment must be between 0 and 1000';
+            if (!Number.isInteger(value)) return 'Must be a whole number';
+            const total = context.document?.studentEnrollmentKto8;
+            if (typeof total === 'number' && value > total) {
+              return 'Registered students cannot exceed Total Enrollment';
+            }
+          }
+          return true;
+        }),
     },
     {
       name: 'adminPhone',

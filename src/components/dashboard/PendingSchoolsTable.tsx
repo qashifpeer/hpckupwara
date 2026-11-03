@@ -56,10 +56,10 @@ export default function PendingSchoolsTable({
           <h2 className="text-xl sm:text-2xl font-black text-slate-100 flex items-center gap-2">
             Pending Institutions Directory
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          {/* <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Schools listed below exist in the Master UDISE Directory but have not completed their profile in{' '}
             <code className="text-cyan-400 font-mono text-xs">dataCompleted</code>.
-          </p>
+          </p> */}
         </div>
 
         <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-2xl flex items-center gap-3 shrink-0">
@@ -180,7 +180,6 @@ export default function PendingSchoolsTable({
       {/* Footer Info */}
       <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 pt-2 gap-2">
         <span>Showing {filteredSchools.length} of {pendingSchools.length} pending institutions across District Kupwara</span>
-        <span className="font-mono text-cyan-400">Match Logic: masterSchool \ dataCompleted</span>
       </div>
     </div>
   );

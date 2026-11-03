@@ -3,3 +3,7 @@ node_modules
 .env
 .env.local
 *.tsbuildinfo
+# Excel data files (handles both .xlsx and .xlxs typos across directories)
+**/kupwara_schools.xlsx
+**/school_profiles.xlsx
+

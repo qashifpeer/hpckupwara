@@ -152,9 +152,7 @@ export default function ZoneWiseStatusCard({ zoneData }: ZoneWiseStatusCardProps
       {/* Footer */}
       <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
         <span>Dynamic Zone Aggregation ({zoneData.length} active educational zones)</span>
-        <span className="text-cyan-400 font-mono">
-          Live Sync • masterSchool × dataCompleted
-        </span>
+       
       </div>
     </div>
   );

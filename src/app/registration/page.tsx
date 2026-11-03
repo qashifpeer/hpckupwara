@@ -99,7 +99,7 @@ export default function RegistrationPage() {
 
       setStatusMessage({
         type: 'success',
-        text: 'Record registered successfully in Sanity!',
+        text: 'Record registered successfully in Database!',
       });
 
       setFormData({
@@ -345,7 +345,7 @@ export default function RegistrationPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    1. Total Staff <span className="text-fuchsia-400">*</span>
+                    1. Total Staff (Teaching only) <span className="text-fuchsia-400">*</span>
                   </label>
                   <input
                     type="number"

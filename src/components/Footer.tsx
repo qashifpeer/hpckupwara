@@ -1,6 +1,7 @@
 // src/components/Footer.tsx
-import React from 'react';
-import { ShieldAlert, UserCheck, Code2 } from 'lucide-react';
+import React from "react";
+import Link from 'next/link';
+import { ShieldAlert, UserCheck, Code2 } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -43,16 +44,30 @@ export default function Footer() {
                 Technical Architecture
               </span>
             </div>
-            <p className="text-base font-bold bg-gradient-to-r from-cyan-300 to-fuchsia-400 bg-clip-text text-transparent">
-              Qashif Peer
+            <Link
+              href="https://wa.me/919906613451"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block hover:opacity-80 transition-opacity"
+            >
+              <p className="text-base font-bold bg-gradient-to-r from-cyan-300 to-fuchsia-400 bg-clip-text text-transparent">
+                Qashif Peer
+              </p>
+            </Link>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Developed and Maintained
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">Developed and Maintained</p>
           </div>
         </div>
 
         <div className="pt-4 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
-          <p>© {new Date().getFullYear()} HPC Kupwara Monitoring Portal. All Rights Reserved.</p>
-          <p className="font-mono text-[11px] text-cyan-300/80">PARAKH Implementation Framework</p>
+          <p>
+            © {new Date().getFullYear()} HPC Kupwara Monitoring Portal. All
+            Rights Reserved.
+          </p>
+          <p className="font-mono text-[11px] text-cyan-300/80">
+            PARAKH Implementation Framework
+          </p>
         </div>
       </div>
     </footer>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { School, Menu, X, Home, UserPlus } from 'lucide-react';
+import { School, Menu, X, Home, UserPlus, FileSpreadsheet } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,6 +12,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Registration', href: '/registration', icon: UserPlus },
+    { name: 'Reports', href: '/schoolreport', icon: FileSpreadsheet },
   ];
 
   const isActive = (href: string) => {

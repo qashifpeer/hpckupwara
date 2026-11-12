@@ -6,8 +6,10 @@ import SchoolCoverageCard from '@/components/dashboard/SchoolCoverageCard';
 import StudentOnboardingCard from '@/components/dashboard/StudentOnboardingCard';
 import StaffOnboardingCard from '@/components/dashboard/StaffOnboardingCard';
 import ZoneWiseStatusCard, { ZoneMetric } from '@/components/dashboard/ZoneWiseStatusCard';
-import PendingSchoolsTable, { PendingSchool } from '@/components/dashboard/PendingSchoolsTable';
 import Footer from '@/components/Footer';
+import ZoneWisePerformanceCard from '@/components/dashboard/ZoneWisePerformanceCard';
+import TopPerformersTable from '@/components/dashboard/TopPerformersTable';
+import SchoolsLookOutZoneTable from '@/components/dashboard/SchoolsLookOutZoneTable';
 
 export const revalidate = 60; // Auto-refresh data every 60 seconds
 
@@ -62,7 +64,7 @@ async function getDashboardData() {
     > = {};
 
     // 2. Identify Pending Schools
-    const pendingSchools: PendingSchool[] = [];
+    // const pendingSchools: PendingSchool[] = [];
     const zonesSet = new Set<string>();
 
     (masterSchools || []).forEach((school) => {
@@ -84,11 +86,11 @@ async function getDashboardData() {
         zoneMap[zoneName].completedHpc += 1;
       } else {
         // Collect missing school
-        pendingSchools.push({
-          udiseCode: cleanUdise,
-          schoolName: school.schoolName || 'Unknown School Name',
-          zone: zoneName,
-        });
+        // pendingSchools.push({
+        //   udiseCode: cleanUdise,
+        //   schoolName: school.schoolName || 'Unknown School Name',
+        //   zone: zoneName,
+        // });
       }
     });
 
@@ -118,7 +120,7 @@ async function getDashboardData() {
       totalReportedStaff: staffAggregates?.totalReportedStaff || 0,
       registeredStaff: staffAggregates?.registeredStaff || 0,
       zoneData,
-      pendingSchools,
+      // pendingSchools,
       zones: sortedZones,
     };
   } catch (error) {
@@ -185,38 +187,41 @@ export default async function DashboardPage() {
               </Link>
 
               {/* Pending Schools Button */}
-              <a
+              {/* <a
                 href="#pending-schools-section"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs text-amber-300 bg-amber-950/60 border border-amber-500/40 hover:bg-amber-900/60 shadow-[0_0_20px_rgba(245,158,11,0.25)] active:scale-95 transition"
               >
                 <ListFilter className="w-4 h-4 text-amber-400" />
                 Pending Schools ({pendingSchools.length})
-              </a>
+              </a> */}
             </div>
           </div>
         </section>
 
         {/* Top Metric Cards Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <SchoolCoverageCard totalMaster={totalMaster} completed={completed} />
-          <StudentOnboardingCard
-            totalTargetEnrollment={totalTargetEnrollment}
-            verifiedEnrolled={verifiedEnrolled}
-          />
-          <StaffOnboardingCard
-            totalReportedStaff={totalReportedStaff}
-            registeredStaff={registeredStaff}
-          />
+          <SchoolCoverageCard  />
+         
+        
         </section>
+         {/* Zone-Wise Status Performance */}
+        <section>
+           <ZoneWisePerformanceCard />
+        </section>
+        
 
         {/* Zone-Wise Status Breakdown Card */}
         <section className="w-full">
           <ZoneWiseStatusCard zoneData={zoneData} />
         </section>
 
-        {/* Dedicated Pending Schools Table Component */}
+        {/* Top Performers Table */}
         <section className="w-full">
-          <PendingSchoolsTable pendingSchools={pendingSchools} zones={zones} />
+          <TopPerformersTable />
+        </section>
+        {/* Top Performers Table */}
+        <section className="w-full">
+          <SchoolsLookOutZoneTable />
         </section>
       </main>
 

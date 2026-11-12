@@ -11,7 +11,10 @@ import ZoneWisePerformanceCard from '@/components/dashboard/ZoneWisePerformanceC
 import TopPerformersTable from '@/components/dashboard/TopPerformersTable';
 import SchoolsLookOutZoneTable from '@/components/dashboard/SchoolsLookOutZoneTable';
 
-export const revalidate = 60; // Auto-refresh data every 60 seconds
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 
 async function getDashboardData() {
   try {

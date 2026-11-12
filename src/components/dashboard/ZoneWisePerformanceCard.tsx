@@ -53,7 +53,7 @@ export default function ZoneWisePerformanceCard() {
             zone,
             code
           },
-          "reports": *[_type == "dailyreport"][0...5000]{
+          "reports": *[_type == "dailyReport"][0...5000]{
             udiseCode,
             totalStudents,
             completed,

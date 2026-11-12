@@ -31,7 +31,7 @@ export default function SchoolCoverageCard() {
     async function fetchAndSumDailyReports() {
       try {
         // Explicit [0...5000] slice bypasses Sanity's default 100-document limit
-        const query = `*[_type == "dailyreport"][0...5000]{
+        const query = `*[_type == "dailyReport"][0...5000]{
           totalStudents,
           completed,
           pending

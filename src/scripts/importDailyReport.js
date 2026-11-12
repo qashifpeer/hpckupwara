@@ -118,11 +118,18 @@ async function importDailyReport() {
   }
 
   if (validDocs.length === 0) {
-    console.log('Nothing to import.');
+    console.log('⚠️ No valid rows found. Aborting without deleting existing records.');
     return;
   }
 
-  // Batch upload in chunks of 100 to respect Sanity transaction limits
+  // 1. Delete all existing dailyReport documents (including drafts, if any)
+  console.log('🧹 Clearing all previous dailyReport records from Sanity...');
+  await client.delete({
+    query: '*[_type == "dailyReport"]',
+  });
+  console.log('🗑️ Previous records cleared.');
+
+  // 2. Batch upload fresh records in chunks of 100
   const CHUNK_SIZE = 100;
   let uploadedCount = 0;
 
@@ -131,15 +138,15 @@ async function importDailyReport() {
     const transaction = client.transaction();
 
     chunk.forEach((doc) => {
-      transaction.createOrReplace(doc);
+      transaction.create(doc);
     });
 
     await transaction.commit();
     uploadedCount += chunk.length;
-    console.log(`🚀 Imported ${uploadedCount} / ${validDocs.length} records...`);
+    console.log(`🚀 Imported ${uploadedCount} / ${validDocs.length} fresh records...`);
   }
 
-  console.log(`🎉 Successfully imported all ${uploadedCount} daily report records into Sanity!`);
+  console.log(`🎉 Successfully replaced old data with ${uploadedCount} fresh daily report records!`);
 }
 
 importDailyReport().catch((err) => {

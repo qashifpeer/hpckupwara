@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import * as XLSX from 'xlsx';
 import {
   Trophy,
   Search,
@@ -9,6 +10,7 @@ import {
   Hash,
   MapPin,
   Building2,
+  Download,
 } from 'lucide-react';
 import { sanityClient } from '@/lib/sanity';
 
@@ -119,7 +121,7 @@ export default function TopPerformersTable() {
     fetchAndMatchData();
   }, []);
 
-  // Filter by Zone & Search, rank by completion % (and completed count as tie-breaker), then slice Top 10
+  // Filter by Zone & Search, rank by completion % (and completed count as tie-breaker), then slice Top 200
   const topPerformers = useMemo(() => {
     return rows
       .filter((school) => {
@@ -141,8 +143,49 @@ export default function TopPerformersTable() {
         }
         return b.completed - a.completed;
       })
-      .slice(0, 10);
+      .slice(0, 200);
   }, [rows, selectedZone, searchQuery]);
+
+  // Export filtered Top 200 Performers to Excel
+  const handleDownloadExcel = () => {
+    if (topPerformers.length === 0) return;
+
+    const exportData = topPerformers.map((item, index) => ({
+      Rank: index + 1,
+      'UDISE Code': item.udiseCode, // Kept as string to preserve leading '0'
+      Zone: item.zone,
+      'School Name': item.schoolName,
+      'Total Students Registered': item.totalStudents,
+      Completed: item.completed,
+      'In Progress': item.inProgress,
+      '% of Completion': `${item.completionPercentage.toFixed(1)}%`,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    // Set readable column widths
+    worksheet['!cols'] = [
+      { wch: 8 },  // Rank
+      { wch: 16 }, // UDISE Code
+      { wch: 18 }, // Zone
+      { wch: 40 }, // School Name
+      { wch: 24 }, // Total Students Registered
+      { wch: 14 }, // Completed
+      { wch: 14 }, // In Progress
+      { wch: 16 }, // % of Completion
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Top 200 Performers');
+
+    const dateStamp = new Date().toISOString().split('T')[0];
+    const zoneLabel =
+      selectedZone === 'ALL'
+        ? 'District_Kupwara'
+        : `Zone_${selectedZone.replace(/\s+/g, '_')}`;
+
+    XLSX.writeFile(workbook, `Top_200_Performers_${zoneLabel}_${dateStamp}.xlsx`);
+  };
 
   return (
     <div
@@ -160,20 +203,34 @@ export default function TopPerformersTable() {
             Leaderboard • Highest Completion Rate
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-100 flex items-center gap-2">
-            Top Performers
+            Top 200 Performers
           </h2>
         </div>
 
-        <div className="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-2xl flex items-center gap-3 shrink-0">
-          <div className="text-right">
-            <span className="text-2xl font-black text-emerald-300 font-mono block leading-none">
-              {loading ? '...' : `Top ${topPerformers.length}`}
-            </span>
-            <span className="text-[10px] uppercase font-bold text-slate-400">
-              {selectedZone === 'ALL'
-                ? 'Across District Kupwara'
-                : `In Zone ${selectedZone}`}
-            </span>
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          {/* Excel Export Button */}
+          <button
+            type="button"
+            onClick={handleDownloadExcel}
+            disabled={loading || topPerformers.length === 0}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold uppercase tracking-wider text-xs text-emerald-200 bg-emerald-950/70 border border-emerald-500/40 hover:bg-emerald-900/70 hover:border-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(16,185,129,0.18)] active:scale-95 transition cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-emerald-400" />
+            Export Excel
+          </button>
+
+          {/* Count Badge */}
+          <div className="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-2xl flex items-center gap-3">
+            <div className="text-right">
+              <span className="text-2xl font-black text-emerald-300 font-mono block leading-none">
+                {loading ? '...' : `Top ${topPerformers.length}`}
+              </span>
+              <span className="text-[10px] uppercase font-bold text-slate-400">
+                {selectedZone === 'ALL'
+                  ? 'Across District Kupwara'
+                  : `In Zone ${selectedZone}`}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -220,13 +277,13 @@ export default function TopPerformersTable() {
         </div>
       </div>
 
-      {/* Responsive Table */}
+      {/* Responsive Scrollable Table with Sticky Header */}
       <div className="rounded-2xl border border-slate-800 overflow-hidden bg-[#070b14]/70">
-        <div className="overflow-x-auto divide-y divide-slate-800/60">
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto divide-y divide-slate-800/60">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#0a0f1d] text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            <thead className="bg-[#0a0f1d] text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 sticky top-0 z-10">
               <tr>
-                <th className="py-3.5 px-4 w-14 text-center">Rank</th>
+                <th className="py-3.5 px-4 w-16 text-center">Rank</th>
                 <th className="py-3.5 px-4 whitespace-nowrap">UDISE Code</th>
                 <th className="py-3.5 px-4 whitespace-nowrap">Zone</th>
                 <th className="py-3.5 px-4 min-w-[220px]">School Name</th>
@@ -272,7 +329,7 @@ export default function TopPerformersTable() {
                     >
                       <td className="py-3 px-4 text-center">
                         <span
-                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-mono font-bold border ${rankBadge}`}
+                          className={`inline-flex items-center justify-center min-w-[1.75rem] h-6 px-1.5 rounded-full text-xs font-mono font-bold border ${rankBadge}`}
                         >
                           {idx + 1}
                         </span>
